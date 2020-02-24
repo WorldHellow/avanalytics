@@ -1,9 +1,11 @@
-# simple-react-full-stack
+# Avanalytics
 
 [![Build Status](https://travis-ci.org/crsandeep/simple-react-full-stack.svg?branch=master)](https://travis-ci.org/crsandeep/simple-react-full-stack)
 [![Greenkeeper badge](https://badges.greenkeeper.io/crsandeep/simple-react-full-stack.svg)](https://greenkeeper.io/)
 
-This is a boilerplate to build a full stack web application using React, Node.js, Express and Webpack. It is also configured with webpack-dev-server, eslint, prettier and babel.
+Audio/Video Analytics analyzes audio & video from online & offline video streams and displays live closed caption, news tickers and celebrities appearing in the streams.
+
+This project is created with a boilerplate using React, Node.js, Express and Webpack. It is also configured with webpack-dev-server, eslint, prettier and babel.
 
 - [simple-react-full-stack](#simple-react-full-stack)
   - [Introduction](#introduction)
