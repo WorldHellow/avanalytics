@@ -1,3 +1,7 @@
+body {
+  background: #2f3238 !important;
+}
+
 .search-bar {
   margin: 5px;
   text-align: center;
@@ -170,6 +174,18 @@
 
 .celebrities-scroll-box container {
   height: 100%;
+}
+
+.celebrity-dropdown {
+  padding: 5px !important;
+  margin-left: 5px !important;
+  float: right;
+  color: white !important;
+  background-color: #575757 !important;
+}
+
+.celebrity-heading {
+  width: 75%;
 }
 
 @media screen and (max-width: 768px) {
