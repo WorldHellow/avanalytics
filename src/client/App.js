@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import socketIOClient from "socket.io-client";
 import YTSearch from "youtube-api-search";
 import VideoList from "./components/video_list";
 import Navbar from "./components/navbar";
@@ -11,16 +12,31 @@ import "./assets/navbar/css/style.css";
 const API_KEY = "AIzaSyCv_zrb2-k07aL9tzITMd1B0QMejoGOt7Ul";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
+  state = {
+    videos: [],
+    selectedVideo: null,
+    navbarActive: "active",
+    response: false,
+    endpoint: "http://localhost:8909"
+  };
 
-    this.state = {
-      videos: [],
-      selectedVideo: null,
-      navbarActive: "active"
-    };
-
+  componentDidMount() {
     this.handleVideoSearch("BBC Urdu");
+
+    const { endpoint } = this.state;
+    const socket = socketIOClient(endpoint);
+    socket.on("FacialRecognitionData", data => {
+      this.setState({ response: data });
+      console.log(data);
+    });
+    socket.on("SpeechRecognitionData", data => {
+      this.setState({ response: data });
+      console.log(data);
+    });
+    socket.on("TickerRecognitionData", data => {
+      this.setState({ response: data });
+      console.log(data);
+    });
   }
 
   handleSidebarCollapse = () => {
