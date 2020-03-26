@@ -14,8 +14,10 @@ app.listen(process.env.PORT || 8080, () =>
   console.log(`Listening on port ${process.env.PORT || 8080}!`)
 );
 
-const modulesServer = app.listen(process.env.PORT || 8909, () =>
-  console.log(`Listening to modules on port ${process.env.PORT || 8909}!`)
+const modulesServer = app.listen(process.env.MODULES_PORT || 8909, () =>
+  console.log(
+    `Listening to modules on port ${process.env.MODULES_PORT || 8909}!`
+  )
 );
 
 const io = require("socket.io")(modulesServer);
