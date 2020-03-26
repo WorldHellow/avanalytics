@@ -17,7 +17,7 @@ class App extends Component {
     selectedVideo: null,
     navbarActive: "active",
     response: false,
-    endpoint: "http://localhost:8909"
+    endpoint: `https://cryptic-shore-88753.herokuapp.com:${process.env.PORT}`
   };
 
   componentDidMount() {
