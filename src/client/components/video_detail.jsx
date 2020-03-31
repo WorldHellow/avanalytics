@@ -35,6 +35,13 @@ class VideoDetail extends Component {
         <React.Fragment>
           <div className="container-fluid">
             <div className="row">
+              <div className="col-lg-8 col-lg-offset-4 celebrity-filters">
+                <div class="line"></div>
+                <button className="celebrity-filters-button">6 hours</button>
+                <button className="celebrity-filters-button">24 hours</button>
+                <button className="celebrity-filters-button">Last Week</button>
+                <div class="line"></div>
+              </div>
               <div className="col-md-8">
                 <div className="row">
                   <div className="col-md-5 yt-live-container">
