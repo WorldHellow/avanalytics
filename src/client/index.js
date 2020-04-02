@@ -8,7 +8,6 @@ import { BrowserRouter } from "react-router-dom";
 import registerServiceWorker from "./registerServiceWorker";
 
 logger.init();
-console.log(process.env.REACT_APP_VERSION);
 
 ReactDOM.render(
   <BrowserRouter>
