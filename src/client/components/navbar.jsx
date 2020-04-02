@@ -1,9 +1,25 @@
 import React, { Component } from "react";
 import SearchBar from "./search_bar";
+import SearchBarList from "./search_bar_list";
 
 class Navbar extends Component {
+  state = { focus: false };
+
+  handleSearchFocus = () => {
+    this.setState({ focus: true });
+  };
+
+  handleSearchBlur = () => {
+    this.setState({ focus: false });
+  };
+
+  handleListItemClick = item => {
+    this.props.onListItemClick(item);
+    this.setState({ focus: false });
+  };
+
   render() {
-    const { onSidebarCollapse, onVideoSearch } = this.props;
+    const { onSidebarCollapse, onVideoSearch, videos } = this.props;
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
@@ -24,7 +40,16 @@ class Navbar extends Component {
           </div>
           <SearchBar
             onSearchTermChange={searchTerm => onVideoSearch(searchTerm)}
+            onFocus={this.handleSearchFocus}
+            onBlur={this.handleSearchBlur}
           />
+          {this.state.focus ? (
+            <SearchBarList
+              videos={videos}
+              onListItemClick={this.handleListItemClick}
+              onBlur={this.handleSearchBlur}
+            />
+          ) : null}
         </div>
       </nav>
     );

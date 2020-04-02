@@ -2,6 +2,7 @@
   --bg: #2f3238;
   --header-color: #575757;
   --border-color: #333333;
+  --faded-border: #777777;
   --header-text-area: #fbeded;
   --ticker1: #5f2323;
   --ticker2: #674949;
@@ -11,21 +12,11 @@
   --text: white;
   --black-text: #3f0b0b;
   --faded-text: #d2d1d1;
+  --search-list-hovered: #3e3e3e;
 }
 
 body {
   background: var(--bg) !important;
-}
-
-.search-bar {
-  margin: 5px;
-  text-align: center;
-}
-
-.search-bar input {
-  width: 85%;
-  background-color: transparent;
-  border: none;
 }
 
 .main-title {
@@ -131,6 +122,102 @@ body {
   width: 30%;
   float: right;
   padding: 0px 10px;
+  margin: 5px;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 85%;
+  background-color: transparent;
+  border: none;
+}
+
+.search-bar-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-right: 17px;
+  border-radius: 20px;
+  background-color: var(--header-color);
+  border: 1px solid #756f6f;
+  width: 30%;
+  float: right;
+  padding: 0px 10px;
+  text-align: center;
+  z-index: 10;
+  opacity: 0.96;
+}
+
+.search-bar-list ul {
+  padding: 0;
+  margin: 0;
+}
+
+.search-bar-list ul li {
+  min-height: 45px;
+  display: table;
+  width: 100%;
+  margin: 7px 0;
+}
+
+.search-bar-list ul li:hover {
+  opacity: 1;
+  background-color: var(--search-list-hovered);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.sbl_not_found {
+  text-align: center !important;
+}
+
+.sbl_not_found:hover {
+  cursor: default !important;
+}
+
+.search-bar-list ul li:not(:last-child) {
+  border-bottom: 1px solid var(--faded-border);
+}
+
+.search-bar-list ul li .col-xs-3 {
+  margin-top: 1%;
+  height: 40px;
+}
+
+.search-bar-list ul li div img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sbl_list_title,
+.sbl_list_desc {
+  margin: 0;
+  color: white;
+  text-align: left;
+  font-weight: 100;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.sbl_list_title {
+  font-size: 12px;
+  -webkit-line-clamp: 1;
+}
+
+.sbl_list_desc {
+  font-size: 11px;
+  -webkit-line-clamp: 2;
+  color: var(--faded-text);
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
 }
 
 .heading-bar {
@@ -238,11 +325,8 @@ body {
   .embed-responsive-item.yt-live {
     width: 100%;
   }
+  .search-bar,
   .search-bar input {
-    width: 80%;
-  }
-
-  .search-bar {
     width: 80%;
   }
 }

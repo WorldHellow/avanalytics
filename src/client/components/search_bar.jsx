@@ -16,12 +16,15 @@ class SearchBar extends React.Component {
   }
 
   render() {
+    const { onFocus, onBlur } = this.props;
     return (
       <div className="search-bar">
         <input
-          placeholder={`Search a youtube video here...`}
+          placeholder={`Search a video here...`}
           value={this.state.term}
           onChange={this.onInputChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         <FontAwesomeIcon icon={faSearch} />
       </div>
