@@ -2,8 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
+import logger from "./services/logService";
+import "font-awesome/css/font-awesome.css";
 import { BrowserRouter } from "react-router-dom";
-// import registerServiceWorker from "./registerServiceWorker";
+import registerServiceWorker from "./registerServiceWorker";
+
+logger.init();
+console.log(process.env.REACT_APP_VERSION);
 
 ReactDOM.render(
   <BrowserRouter>
@@ -11,4 +16,4 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById("root")
 );
-// registerServiceWorker();
+registerServiceWorker();

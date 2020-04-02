@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import socketIOClient from "socket.io-client";
-import YTSearch from "youtube-api-search";
-import VideoList from "./components/video_list";
 import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
 import VideoDetail from "./components/video_detail";
 import NotFound from "./components/not-found";
+import { getVideos } from "./services/videoService";
 import "font-awesome/css/font-awesome.min.css";
 import "./assets/navbar/css/style.css";
-const API_KEY = "AIzaSyCv_zrb2-k07aL9tzITMd1B0QMejoGOt7Ul";
+import "react-toastify/dist/ReactToastify.css";
+const YOUTUBE_API_KEY = "AIzaSyCv_zrb2-k07aL9tzITMd1B0QMejoGOt7U";
 
 class App extends Component {
   state = {
@@ -20,7 +21,9 @@ class App extends Component {
     endpoint: "http://localhost:8909"
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    // const { data: videos } = await getVideos();
+
     this.handleVideoSearch("");
 
     const { endpoint } = this.state;
@@ -103,18 +106,10 @@ class App extends Component {
           video.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
     this.setState({
       videos: filteredVideos,
       selectedVideo: filteredVideos[0]
     });
-
-    // YTSearch({ key: API_KEY, term: searchTerm }, data => {
-    //   this.setState({
-    //     videos: data,
-    //     selectedVideo: data[0]
-    //   });
-    // });
   };
 
   setSelectedVideo = video => {
@@ -128,6 +123,8 @@ class App extends Component {
     const { navbarActive, selectedVideo, videos } = this.state;
     return (
       <React.Fragment>
+        <ToastContainer></ToastContainer>
+
         <div className="wrapper d-flex align-items-stretch">
           <Sidebar navbarActive={navbarActive}></Sidebar>
 
