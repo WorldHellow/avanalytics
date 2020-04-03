@@ -101,16 +101,23 @@ const io = require("socket.io")(modulesServer);
 io.on("connection", function(socket) {
   console.info(`Client connected [id=${socket.id}]`);
 
-  socket.on("FacialRecognition", function(data) {
-    socket.broadcast.emit("FacialRecognitionData", data);
+  socket.on("VideoTrigger", function(data) {
+    socket.broadcast.emit("FacialRecognitionCall", data);
+    socket.broadcast.emit("TickerRecognitionCall", data);
+    socket.broadcast.emit("SpeechRecognitionCall", data);
+    console.log("VideoTrigger dump: ", data);
+  });
+
+  socket.on("FacialRecognitionData", function(data) {
+    socket.broadcast.emit("FacialRecognitionClient", data);
     console.log("Facial Recognition data dump: ", data);
   });
 
-  socket.on("SpeechRecognition", function(data) {
+  socket.on("SpeechRecognitionData", function(data) {
     console.log("Speech Recognition data dump: ", data);
   });
 
-  socket.on("TickerRecognition", function(data) {
+  socket.on("TickerRecognitionData", function(data) {
     console.log("Ticker Recognition data dump: ", data);
   });
 

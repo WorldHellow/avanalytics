@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactPlayer from "react-player";
 import socketIOClient from "socket.io-client";
+import SocketContext from "./socketContext";
 import CelebrityCard from "./celebrity_card";
 import ClosedCaption from "./closed_caption";
 import NewsTicker from "./news_ticker";
@@ -8,6 +9,8 @@ import StreamTrend from "./stream_trend";
 import "../assets/css/gfonts.css";
 import "../assets/css/celebrity_card.css";
 import "../assets/css/heading_bar.css";
+
+const socket = socketIOClient(process.env.REACT_APP_MODULES_SOCKET_URL);
 
 class VideoDetail extends Component {
   state = { response: false, endpoint: "http://localhost:8909" };
@@ -19,21 +22,19 @@ class VideoDetail extends Component {
     }
   };
 
+  handleVideoPlay = () => {
+    const videoId = this.props.video.videoId;
+    socket.emit("VideoTrigger", { videoId: videoId });
+  };
+
   async componentDidMount() {
     this.scrollToBottom();
 
-    const socketEndpoint = process.env.REACT_APP_MODULES_SOCKET_URL;
-    console.log(socketEndpoint);
-    const socket = socketIOClient(socketEndpoint);
-    socket.on("FacialRecognitionData", data => {
+    socket.on("SpeechRecognitionClient", data => {
       this.setState({ response: data });
       console.log(data);
     });
-    socket.on("SpeechRecognitionData", data => {
-      this.setState({ response: data });
-      console.log(data);
-    });
-    socket.on("TickerRecognitionData", data => {
+    socket.on("TickerRecognitionClient", data => {
       this.setState({ response: data });
       console.log(data);
     });
@@ -65,6 +66,7 @@ class VideoDetail extends Component {
                     <ReactPlayer
                       className="embed-responsive-item yt-live"
                       url={`${publicURL}/${video.url}`}
+                      onPlay={this.handleVideoPlay}
                       config={{
                         file: { attributes: { controlsList: "nodownload" } }
                       }}
@@ -73,7 +75,7 @@ class VideoDetail extends Component {
                     />
                   </div>
                   <div className="col-md-7">
-                    <CelebrityCard></CelebrityCard>
+                    <CelebrityCard socket={socket}></CelebrityCard>
                   </div>
                 </div>
                 <div className="row">
