@@ -245,9 +245,9 @@ button:focus {
 }
 
 .embed-responsive-item.yt-live {
-  width: 100%;
-  height: auto;
-  min-height: 300px;
+  width: 100% !important;
+  height: auto !important;
+  /* min-height: 300px; */
   border-radius: 10px;
   border-color: black;
 }

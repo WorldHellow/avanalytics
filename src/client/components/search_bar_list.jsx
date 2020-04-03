@@ -1,8 +1,11 @@
 import React, { Component } from "react";
+// import VideoThumbnail from "react-video-thumbnail";
 
 class SearchBarList extends Component {
   render() {
     const { videos, onListItemClick, onBlur } = this.props;
+    const publicURL = process.env.REACT_APP_PUBLIC_URL;
+
     return (
       <React.Fragment>
         <div className="search-bar-list">
@@ -10,7 +13,15 @@ class SearchBarList extends Component {
             {videos.map(item => (
               <li key={item.videoId} onMouseDown={() => onListItemClick(item)}>
                 <div className="col-xs-3">
-                  <img src={item.thumbnails.default.url} alt={item.title} />
+                  {/* <VideoThumbnail
+                    videoUrl={`public/${item.url}`}
+                    snapshotAtTime={1}
+                    renderThumbnail={true}
+                  /> */}
+                  <img
+                    src={`${publicURL}/${item.thumbnails.default.url}`}
+                    alt={item.title}
+                  />
                 </div>
                 <div className="col-xs-9">
                   <p className="sbl_list_title">{item.title}</p>

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import socketIOClient from "socket.io-client";
 import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
 import VideoDetail from "./components/video_detail";
@@ -16,28 +15,11 @@ class App extends Component {
   state = {
     videos: [],
     selectedVideo: null,
-    navbarActive: "active",
-    response: false,
-    endpoint: "http://localhost:8909"
+    navbarActive: "active"
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     this.handleVideoSearch("");
-
-    const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.on("FacialRecognitionData", data => {
-      this.setState({ response: data });
-      console.log(data);
-    });
-    socket.on("SpeechRecognitionData", data => {
-      this.setState({ response: data });
-      console.log(data);
-    });
-    socket.on("TickerRecognitionData", data => {
-      this.setState({ response: data });
-      console.log(data);
-    });
   }
 
   handleSidebarCollapse = () => {

@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import CelebrityHeader from "./celebrity_header";
+import { getCelebrities } from "../services/celebrityService";
 
 class CelebrityCard extends Component {
+  state = { celebrities: {}, currentCelebrities: {} };
+
+  async componentDidMount() {
+    const { data } = await getCelebrities();
+    this.setState({ celebrities: data.celebrities });
+  }
+
   render() {
     return (
       <React.Fragment>

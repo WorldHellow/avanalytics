@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import Alert from "react-bootstrap/Alert";
+import ReactPlayer from "react-player";
+import socketIOClient from "socket.io-client";
 import CelebrityCard from "./celebrity_card";
 import ClosedCaption from "./closed_caption";
 import NewsTicker from "./news_ticker";
@@ -9,7 +10,7 @@ import "../assets/css/celebrity_card.css";
 import "../assets/css/heading_bar.css";
 
 class VideoDetail extends Component {
-  state = { waaa: {} };
+  state = { response: false, endpoint: "http://localhost:8909" };
   closedCaptionRef = React.createRef();
 
   scrollToBottom = () => {
@@ -18,8 +19,24 @@ class VideoDetail extends Component {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.scrollToBottom();
+
+    const socketEndpoint = process.env.REACT_APP_MODULES_SOCKET_URL;
+    console.log(socketEndpoint);
+    const socket = socketIOClient(socketEndpoint);
+    socket.on("FacialRecognitionData", data => {
+      this.setState({ response: data });
+      console.log(data);
+    });
+    socket.on("SpeechRecognitionData", data => {
+      this.setState({ response: data });
+      console.log(data);
+    });
+    socket.on("TickerRecognitionData", data => {
+      this.setState({ response: data });
+      console.log(data);
+    });
   }
 
   componentDidUpdate() {
@@ -28,6 +45,7 @@ class VideoDetail extends Component {
 
   render() {
     const { video } = this.props;
+    const publicURL = process.env.REACT_APP_PUBLIC_URL;
 
     if (video) {
       return (
@@ -44,10 +62,15 @@ class VideoDetail extends Component {
               <div className="col-md-8">
                 <div className="row">
                   <div className="col-md-5 yt-live-container">
-                    <iframe
+                    <ReactPlayer
                       className="embed-responsive-item yt-live"
-                      src={video.url}
-                    ></iframe>
+                      url={`${publicURL}/${video.url}`}
+                      config={{
+                        file: { attributes: { controlsList: "nodownload" } }
+                      }}
+                      onContextMenu={e => e.preventDefault()}
+                      controls
+                    />
                   </div>
                   <div className="col-md-7">
                     <CelebrityCard></CelebrityCard>

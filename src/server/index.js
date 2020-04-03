@@ -1,74 +1,96 @@
 const express = require("express");
 const os = require("os");
 var cors = require("cors");
+var fs = require("fs");
 
 const app = express();
 app.use(cors());
 
 app.use(express.static("dist"));
+app.use("/public", express.static("public"));
 
+/* OS Username GET api */
 app.get("/api/getUsername", (req, res) =>
   res.send({ username: os.userInfo().username })
 );
 
+/* Videos GET api */
 app.get("/api/videos", (req, res) =>
   res.send({
     videos: [
       {
         videoId: 1,
         publishedAt: "2017-09-09T23:38:21.000Z",
-        title:
-          "Sairbeen 26 Mar 2020 - Coronavirus toll rises in USA. The latest from Sindh. & WorkingFromHome tips",
-        description: "BBC URDU TV PROGRAMME SAIRBEEN",
+        title: "ARY News - Part 01",
+        description: "1st part of an ARY News Broadcast clip.",
         thumbnails: {
           default: {
-            url: "https://i.ytimg.com/vi/vXrqQ-MduZQ/sddefault.jpg"
+            url: "videos/thumbnails/001.png"
           },
           medium: {},
           high: {}
         },
-        url: "https://www.youtube.com/embed/vXrqQ-MduZQ"
+        url: "videos/001.mp4"
       },
       {
         videoId: 2,
         publishedAt: "2017-09-09T23:38:21.000Z",
-        title:
-          "Sairbeen 30 Mar 2020 - Coronavirus cases rise in Pakistan, as authorities mull stricter measures.",
-        description: "BBC URDU TV PROGRAMME SAIRBEEN",
+        title: "ARY News - Part 02",
+        description: "2nd part of an ARY News Broadcast clip.",
         thumbnails: {
           default: {
-            url: "https://i.ytimg.com/vi/FoD045_tC6k/sddefault.jpg"
+            url: "videos/thumbnails/002.png"
           },
           medium: {},
           high: {}
         },
-        url: "https://www.youtube.com/embed/FoD045_tC6k"
+        url: "videos/002.mp4"
       },
       {
         videoId: 3,
         publishedAt: "2017-09-09T23:38:21.000Z",
-        title:
-          "Sairbeen 31 March 2020: Tableegh group in India linked to Covid-19 cases",
-        description: "BBC URDU TV PROGRAMME SAIRBEEN",
+        title: "ARY News - Part 03",
+        description: "3rd part of an ARY News Broadcast clip.",
         thumbnails: {
           default: {
-            url: "https://i.ytimg.com/vi/YXgB_0L-g4o/sddefault.jpg"
+            url: "videos/thumbnails/003.png"
           },
           medium: {},
           high: {}
         },
-        url: "https://www.youtube.com/embed/YXgB_0L-g4o"
+        url: "videos/003.mp4"
+      },
+      {
+        videoId: 4,
+        publishedAt: "2017-09-09T23:38:21.000Z",
+        title: "ARY News - Part 04",
+        description: "4th part of an ARY News Broadcast clip.",
+        thumbnails: {
+          default: {
+            url: "videos/thumbnails/004.png"
+          },
+          medium: {},
+          high: {}
+        },
+        url: "videos/004.mp4"
       }
     ]
   })
 );
 
-app.get("/", (req, res) => res.send({ username: os.userInfo().username }));
+/* Labels GET api */
+app.get("/api/celebrities", (req, res) => {
+  fs.readFile("public/celebrities/labels.json", "utf8", function(err, data) {
+    if (err) throw err;
+    res.send(JSON.parse(data));
+  });
+});
 
 app.listen(process.env.PORT || 8080, () =>
   console.log(`Listening on port ${process.env.PORT || 8080}!`)
 );
 
+/* Socket Connections */
 const modulesServer = app.listen(process.env.MODULES_PORT || 8909, () =>
   console.log(
     `Listening to modules on port ${process.env.MODULES_PORT || 8909}!`
@@ -76,7 +98,6 @@ const modulesServer = app.listen(process.env.MODULES_PORT || 8909, () =>
 );
 
 const io = require("socket.io")(modulesServer);
-
 io.on("connection", function(socket) {
   console.info(`Client connected [id=${socket.id}]`);
 
