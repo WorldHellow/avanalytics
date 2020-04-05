@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import ReactPlayer from "react-player";
 import socketIOClient from "socket.io-client";
-import SocketContext from "./socketContext";
-import CelebrityCard from "./celebrity_card";
-import ClosedCaption from "./closed_caption";
-import NewsTicker from "./news_ticker";
-import StreamTrend from "./stream_trend";
+import CelebrityPanel from "./CelebrityPanel/celebrity_panel";
+import ClosedCaptionPanel from "./ClosedCaptionsPanel/closed_caption_panel";
+import NewsTickerPanel from "./NewsTickersPanel/news_ticker_panel";
+import StreamTrendPanel from "./StreamTrendPanel/stream_trend_panel";
 import "../assets/css/gfonts.css";
 import "../assets/css/celebrity_card.css";
 import "../assets/css/heading_bar.css";
@@ -13,7 +12,7 @@ import "../assets/css/heading_bar.css";
 const socket = socketIOClient(process.env.REACT_APP_MODULES_SOCKET_URL);
 
 class VideoDetail extends Component {
-  state = { response: false, endpoint: "http://localhost:8909" };
+  state = { response: false };
   closedCaptionRef = React.createRef();
 
   scrollToBottom = () => {
@@ -29,15 +28,6 @@ class VideoDetail extends Component {
 
   async componentDidMount() {
     this.scrollToBottom();
-
-    socket.on("SpeechRecognitionClient", data => {
-      this.setState({ response: data });
-      console.log(data);
-    });
-    socket.on("TickerRecognitionClient", data => {
-      this.setState({ response: data });
-      console.log(data);
-    });
   }
 
   componentDidUpdate() {
@@ -68,27 +58,28 @@ class VideoDetail extends Component {
                       url={`${publicURL}/${video.url}`}
                       onPlay={this.handleVideoPlay}
                       config={{
-                        file: { attributes: { controlsList: "nodownload" } }
+                        file: { attributes: { controlsList: "nodownload" } },
                       }}
-                      onContextMenu={e => e.preventDefault()}
+                      onContextMenu={(e) => e.preventDefault()}
                       controls
                     />
                   </div>
                   <div className="col-md-7">
-                    <CelebrityCard socket={socket}></CelebrityCard>
+                    <CelebrityPanel socket={socket} />
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-12">
-                    <ClosedCaption
+                    <ClosedCaptionPanel
+                      socket={socket}
                       closedCaptionRef={this.closedCaptionRef}
-                    ></ClosedCaption>
-                    <NewsTicker></NewsTicker>
+                    />
+                    <NewsTickerPanel socket={socket} />
                   </div>
                 </div>
               </div>
               <div className="col-md-4">
-                <StreamTrend></StreamTrend>
+                <StreamTrendPanel />
               </div>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class StreamTrend extends Component {
+class StreamTrendPanel extends Component {
   render() {
     return (
       <React.Fragment>
@@ -14,4 +14,4 @@ class StreamTrend extends Component {
   }
 }
 
-export default StreamTrend;
+export default StreamTrendPanel;

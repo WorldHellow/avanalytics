@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 
-class ClosedCaption extends Component {
+class ClosedCaptionPanel extends Component {
+  async componentDidMount() {
+    this.props.socket.on("SpeechRecognitionClient", (data) => {
+      console.log("Data from SpeechRecognition Module :", data);
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -19,4 +25,4 @@ class ClosedCaption extends Component {
   }
 }
 
-export default ClosedCaption;
+export default ClosedCaptionPanel;

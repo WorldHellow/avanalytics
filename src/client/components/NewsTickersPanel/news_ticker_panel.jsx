@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 
-class NewsTicker extends Component {
+class NewsTickerPanel extends Component {
+  state = {};
+
+  async componentDidMount() {
+    this.props.socket.on("TickerRecognitionClient", (data) => {
+      console.log("Data from TickerRecognition Module :", data);
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -42,4 +50,4 @@ class NewsTicker extends Component {
   }
 }
 
-export default NewsTicker;
+export default NewsTickerPanel;

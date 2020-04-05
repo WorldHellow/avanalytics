@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import Navbar from "./components/navbar";
+import Navbar from "./components/NavBar/navbar";
 import Sidebar from "./components/sidebar";
 import VideoDetail from "./components/video_detail";
 import NotFound from "./components/not-found";
@@ -9,17 +9,16 @@ import { getVideos } from "./services/videoService";
 import "font-awesome/css/font-awesome.min.css";
 import "./assets/navbar/css/style.css";
 import "react-toastify/dist/ReactToastify.css";
-const YOUTUBE_API_KEY = "AIzaSyCv_zrb2-k07aL9tzITMd1B0QMejoGOt7U";
 
 class App extends Component {
   state = {
     videos: [],
     selectedVideo: null,
-    navbarActive: "active"
+    navbarActive: "active",
   };
 
   componentDidMount() {
-    this.handleVideoSearch("");
+    this.populateVideos();
   }
 
   handleSidebarCollapse = () => {
@@ -28,33 +27,39 @@ class App extends Component {
       : this.setState({ navbarActive: "active" });
   };
 
-  handleVideoSearch = async searchTerm => {
+  populateVideos = async () => {
     const { data } = await getVideos();
     const allVideos = data.videos;
-    let filteredVideos = allVideos;
+    this.setState({
+      videos: allVideos,
+      filteredVideos: allVideos,
+      selectedVideo: allVideos[0],
+    });
+  };
+
+  handleVideoSearch = (searchTerm) => {
+    const videos = [...this.state.videos];
+    let filteredVideos = videos;
 
     if (searchTerm) {
-      filteredVideos = allVideos.filter(
-        video =>
+      filteredVideos = videos.filter(
+        (video) =>
           video.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           video.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    this.setState({
-      videos: filteredVideos,
-      selectedVideo: filteredVideos[0]
-    });
+    this.setState({ filteredVideos });
   };
 
-  setSelectedVideo = video => {
+  setSelectedVideo = (video) => {
     const selectedVideo = { ...video };
     this.setState({
-      selectedVideo
+      selectedVideo,
     });
   };
 
   render() {
-    const { navbarActive, selectedVideo, videos } = this.state;
+    const { navbarActive, selectedVideo, filteredVideos } = this.state;
     return (
       <React.Fragment>
         <ToastContainer></ToastContainer>
@@ -64,7 +69,7 @@ class App extends Component {
 
           <div id="content" className="p-3 p-md-4">
             <Navbar
-              videos={videos}
+              videos={filteredVideos}
               onVideoSearch={this.handleVideoSearch}
               onSidebarCollapse={this.handleSidebarCollapse}
               onListItemClick={this.setSelectedVideo}
@@ -75,7 +80,7 @@ class App extends Component {
                 <Route
                   path="/"
                   exact
-                  render={props => (
+                  render={(props) => (
                     <VideoDetail {...props} video={selectedVideo} />
                   )}
                 ></Route>

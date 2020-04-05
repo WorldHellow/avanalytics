@@ -13,7 +13,7 @@ class Navbar extends Component {
     this.setState({ focus: false });
   };
 
-  handleListItemClick = item => {
+  handleListItemClick = (item) => {
     this.props.onListItemClick(item);
     this.setState({ focus: false });
   };
@@ -39,7 +39,7 @@ class Navbar extends Component {
             </label>
           </div>
           <SearchBar
-            onSearchTermChange={searchTerm => onVideoSearch(searchTerm)}
+            onSearchTermChange={(searchTerm) => onVideoSearch(searchTerm)}
             onFocus={this.handleSearchFocus}
             onBlur={this.handleSearchBlur}
           />

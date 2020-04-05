@@ -1,7 +1,7 @@
 import React from "react";
 import _ from "lodash";
 
-const CelebrityItem = ({ celebrity }) => {
+const CelebrityCard = ({ celebrity }) => {
   const publicURL = process.env.REACT_APP_PUBLIC_URL;
   const name = celebrity.name.split("_");
 
@@ -27,4 +27,4 @@ const CelebrityItem = ({ celebrity }) => {
   );
 };
 
-export default CelebrityItem;
+export default CelebrityCard;
