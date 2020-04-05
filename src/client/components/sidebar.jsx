@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 class Sidebar extends Component {
   render() {
@@ -7,30 +7,30 @@ class Sidebar extends Component {
     return (
       <nav id="sidebar" className={navbarActive}>
         <h1>
-          <Link to="/" className="logo">
+          <NavLink to="/" className="logo">
             N.
-          </Link>
+          </NavLink>
         </h1>
         <ul className="list-unstyled components mb-5">
           <li className="active">
-            <Link to="/">
+            <NavLink to="/">
               <span className="fa fa-home"></span> Home
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/">
+            <NavLink to="/">
               <span className="fa fa-sticky-note"></span> History
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/">
+            <NavLink to="/">
               <span className="fa fa-cogs"></span> Analytics
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/">
+            <NavLink to="/">
               <span className="fa fa-user"></span> About
-            </Link>
+            </NavLink>
           </li>
         </ul>
 

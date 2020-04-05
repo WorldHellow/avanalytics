@@ -1,5 +1,5 @@
-import React from "react";
+import socketIOClient from "socket.io-client";
 
-const SocketContext = React.createContext();
+const socket = socketIOClient(process.env.REACT_APP_MODULES_SOCKET_URL);
 
-export default SocketContext;
+export default socket;

@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import Navbar from "./components/NavBar/navbar";
 import Sidebar from "./components/sidebar";
 import VideoDetail from "./components/video_detail";
 import NotFound from "./components/not-found";
 import { getVideos } from "./services/videoService";
+import socket from "./components/socketContext";
 import "font-awesome/css/font-awesome.min.css";
 import "./assets/navbar/css/style.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +20,20 @@ class App extends Component {
 
   componentDidMount() {
     this.populateVideos();
+    window.addEventListener("beforeunload", this.componentCleanup);
+  }
+
+  componentWillUnmount() {
+    this.componentCleanup();
+    window.removeEventListener("beforeunload", this.componentCleanup);
+  }
+
+  componentCleanup() {
+    socket.emit("VideoStopTrigger");
+    toast.warn("Audio Video Analytics processing stopped!", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+    });
+    socket.close();
   }
 
   handleSidebarCollapse = () => {
@@ -52,7 +67,13 @@ class App extends Component {
   };
 
   setSelectedVideo = (video) => {
+    if (this.state.selectedVideo.videoId === video.videoId) return;
     const selectedVideo = { ...video };
+    socket.emit("VideoStopTrigger");
+    toast.warn("Audio Video Analytics processing stopped!", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+    });
+
     this.setState({
       selectedVideo,
     });

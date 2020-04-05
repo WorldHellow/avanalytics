@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import socket from "../socketContext";
 
 class ClosedCaptionPanel extends Component {
   async componentDidMount() {
-    this.props.socket.on("SpeechRecognitionClient", (data) => {
+    socket.on("SpeechRecognitionClient", (data) => {
       console.log("Data from SpeechRecognition Module :", data);
     });
   }

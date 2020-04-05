@@ -2,12 +2,20 @@ import socketio
 from apscheduler.schedulers.background import BackgroundScheduler
 import random
 
+
+# Socket connection for communication with the server
 sio = socketio.Client()
-sio.connect('http://localhost:8909')
+sio.connect('http://localhost:8080')
 
-# Replace your FacialRecognition with your module call as specified
+# Scheduler for sending data to server after every regular intervals
+scheduler = BackgroundScheduler()
 
 
+def main():
+    scheduler.start()
+
+
+# Replace FacialRecognition with your module call as specified
 def FacialRecognitionEmit():
     sio.emit('FacialRecognitionData', {
              'celeb_id': random.randint(0, 107), 'timestamp': 1.0434782608695652})
@@ -15,12 +23,15 @@ def FacialRecognitionEmit():
 
 @sio.event
 def FacialRecognitionCall(data):
-    print('VideoTrigger Call with data', data)
-    scheduler = BackgroundScheduler()
     scheduler.add_job(FacialRecognitionEmit, 'interval', seconds=5)
-    scheduler.start()
+    print('VideoTrigger Call with data', data)
 
 
 @sio.event
-def FacialRecognitionTerminate(data):
+def FacialRecognitionTerminate():
+    scheduler.remove_all_jobs()
     print('Terminate all of the ongoing processes!')
+
+
+if __name__ == '__main__':
+    main()

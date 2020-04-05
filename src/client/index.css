@@ -6,7 +6,7 @@
   --header-text-area: #fbeded;
   --ticker1: #5f2323;
   --ticker2: #674949;
-  --ticker3: #4f4f4f;
+  --ticker0: #4f4f4f;
   --text-area: #3f0b0b;
   --white-text-area: white;
   --text: white;
@@ -107,9 +107,9 @@ body {
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
 }
 
-.ticker-3 {
+.ticker-0 {
   color: var(--text);
-  background-color: var(--ticker3);
+  background-color: var(--ticker0);
   border-top: 1px solid black;
   border-bottom: 1px solid black;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;

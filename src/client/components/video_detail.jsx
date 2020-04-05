@@ -1,18 +1,16 @@
 import React, { Component } from "react";
 import ReactPlayer from "react-player";
-import socketIOClient from "socket.io-client";
+import { toast } from "react-toastify";
 import CelebrityPanel from "./CelebrityPanel/celebrity_panel";
 import ClosedCaptionPanel from "./ClosedCaptionsPanel/closed_caption_panel";
 import NewsTickerPanel from "./NewsTickersPanel/news_ticker_panel";
 import StreamTrendPanel from "./StreamTrendPanel/stream_trend_panel";
+import socket from "./socketContext";
 import "../assets/css/gfonts.css";
 import "../assets/css/celebrity_card.css";
 import "../assets/css/heading_bar.css";
 
-const socket = socketIOClient(process.env.REACT_APP_MODULES_SOCKET_URL);
-
 class VideoDetail extends Component {
-  state = { response: false };
   closedCaptionRef = React.createRef();
 
   scrollToBottom = () => {
@@ -23,7 +21,17 @@ class VideoDetail extends Component {
 
   handleVideoPlay = () => {
     const videoId = this.props.video.videoId;
-    socket.emit("VideoTrigger", { videoId: videoId });
+    socket.emit("VideoPlayTrigger", { videoId: videoId });
+    toast("Audio Video Analytics processing started!", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+    });
+  };
+
+  handleVideoPause = () => {
+    socket.emit("VideoStopTrigger");
+    toast.warn("Audio Video Analytics processing stopped!", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+    });
   };
 
   async componentDidMount() {
@@ -57,6 +65,7 @@ class VideoDetail extends Component {
                       className="embed-responsive-item yt-live"
                       url={`${publicURL}/${video.url}`}
                       onPlay={this.handleVideoPlay}
+                      onPause={this.handleVideoPause}
                       config={{
                         file: { attributes: { controlsList: "nodownload" } },
                       }}
@@ -65,16 +74,15 @@ class VideoDetail extends Component {
                     />
                   </div>
                   <div className="col-md-7">
-                    <CelebrityPanel socket={socket} />
+                    <CelebrityPanel />
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-12">
                     <ClosedCaptionPanel
-                      socket={socket}
                       closedCaptionRef={this.closedCaptionRef}
                     />
-                    <NewsTickerPanel socket={socket} />
+                    <NewsTickerPanel />
                   </div>
                 </div>
               </div>

@@ -1,7 +1,20 @@
 import React, { Component } from "react";
+import ContentLoader from "react-content-loader";
 import CelebrityHeader from "./celebrity_header";
 import CelebrityCard from "./celebrity_card";
 import { getCelebrities } from "../../services/celebrityService";
+import socket from "../socketContext";
+
+const CelebrityCardLoader = () => (
+  <ContentLoader
+    gradientRatio={0.2}
+    backgroundColor={"#756f6f"}
+    foregroundColor={"#333"}
+    speed={2}
+  >
+    <rect x="4" y="10" rx="5" ry="5" width="120" height="175" />
+  </ContentLoader>
+);
 
 class CelebrityPanel extends Component {
   state = { celebrities: {}, currentCelebrities: [] };
@@ -10,7 +23,7 @@ class CelebrityPanel extends Component {
     const { data } = await getCelebrities();
     this.setState({ celebrities: data.celebrities });
 
-    this.props.socket.on("FacialRecognitionClient", (data) => {
+    socket.on("FacialRecognitionClient", (data) => {
       console.log("Data from FacialRecognition Module :", data);
       const celebrities = [...this.state.currentCelebrities];
 
@@ -36,11 +49,14 @@ class CelebrityPanel extends Component {
           <div className="image-grid">
             {currentCelebrities.map((item) => (
               <CelebrityCard
+                key={item.celeb_id}
                 celebrity={celebrities.find(
                   (o) => o.celeb_id === item.celeb_id
                 )}
               />
             ))}
+            {(!Array.isArray(currentCelebrities) ||
+              !currentCelebrities.length) && <CelebrityCardLoader />}
           </div>
         </div>
       </React.Fragment>

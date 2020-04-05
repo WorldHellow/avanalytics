@@ -25,12 +25,12 @@ app.get("/api/videos", (req, res) =>
         description: "1st part of an ARY News Broadcast clip.",
         thumbnails: {
           default: {
-            url: "videos/thumbnails/001.png"
+            url: "videos/thumbnails/001.png",
           },
           medium: {},
-          high: {}
+          high: {},
         },
-        url: "videos/001.mp4"
+        url: "videos/001.mp4",
       },
       {
         videoId: 2,
@@ -39,12 +39,12 @@ app.get("/api/videos", (req, res) =>
         description: "2nd part of an ARY News Broadcast clip.",
         thumbnails: {
           default: {
-            url: "videos/thumbnails/002.png"
+            url: "videos/thumbnails/002.png",
           },
           medium: {},
-          high: {}
+          high: {},
         },
-        url: "videos/002.mp4"
+        url: "videos/002.mp4",
       },
       {
         videoId: 3,
@@ -53,12 +53,12 @@ app.get("/api/videos", (req, res) =>
         description: "3rd part of an ARY News Broadcast clip.",
         thumbnails: {
           default: {
-            url: "videos/thumbnails/003.png"
+            url: "videos/thumbnails/003.png",
           },
           medium: {},
-          high: {}
+          high: {},
         },
-        url: "videos/003.mp4"
+        url: "videos/003.mp4",
       },
       {
         videoId: 4,
@@ -67,57 +67,65 @@ app.get("/api/videos", (req, res) =>
         description: "4th part of an ARY News Broadcast clip.",
         thumbnails: {
           default: {
-            url: "videos/thumbnails/004.png"
+            url: "videos/thumbnails/004.png",
           },
           medium: {},
-          high: {}
+          high: {},
         },
-        url: "videos/004.mp4"
-      }
-    ]
+        url: "videos/004.mp4",
+      },
+    ],
   })
 );
 
 /* Labels GET api */
 app.get("/api/celebrities", (req, res) => {
-  fs.readFile("public/celebrities/labels.json", "utf8", function(err, data) {
+  fs.readFile("public/celebrities/labels.json", "utf8", function (err, data) {
     if (err) throw err;
     res.send(JSON.parse(data));
   });
 });
 
-app.listen(process.env.PORT || 8080, () =>
+const server = app.listen(process.env.PORT || 8080, () =>
   console.log(`Listening on port ${process.env.PORT || 8080}!`)
 );
 
-/* Socket Connections */
-const modulesServer = app.listen(process.env.MODULES_PORT || 8909, () =>
-  console.log(
-    `Listening to modules on port ${process.env.MODULES_PORT || 8909}!`
-  )
-);
+// /* Socket Connections */
+// const modulesServer = app.listen(process.env.MODULES_PORT || 8909, () =>
+//   console.log(
+//     `Listening to modules on port ${process.env.MODULES_PORT || 8909}!`
+//   )
+// );
 
-const io = require("socket.io")(modulesServer);
-io.on("connection", function(socket) {
+const io = require("socket.io")(server);
+io.on("connection", function (socket) {
   console.info(`Client connected [id=${socket.id}]`);
 
-  socket.on("VideoTrigger", function(data) {
+  socket.on("VideoPlayTrigger", function (data) {
     socket.broadcast.emit("FacialRecognitionCall", data);
     socket.broadcast.emit("TickerRecognitionCall", data);
     socket.broadcast.emit("SpeechRecognitionCall", data);
-    console.log("VideoTrigger dump: ", data);
+    console.log("Video play trigger: ", data);
   });
 
-  socket.on("FacialRecognitionData", function(data) {
+  socket.on("VideoStopTrigger", function (data) {
+    socket.broadcast.emit("FacialRecognitionTerminate");
+    socket.broadcast.emit("TickerRecognitionTerminate");
+    socket.broadcast.emit("SpeechRecognitionTerminate");
+    console.log("Video stop trigger called!");
+  });
+
+  socket.on("FacialRecognitionData", function (data) {
     socket.broadcast.emit("FacialRecognitionClient", data);
     console.log("Facial Recognition data dump: ", data);
   });
 
-  socket.on("SpeechRecognitionData", function(data) {
+  socket.on("SpeechRecognitionData", function (data) {
     console.log("Speech Recognition data dump: ", data);
   });
 
-  socket.on("TickerRecognitionData", function(data) {
+  socket.on("TickerRecognitionData", function (data) {
+    socket.broadcast.emit("TickerRecognitionClient", data);
     console.log("Ticker Recognition data dump: ", data);
   });
 

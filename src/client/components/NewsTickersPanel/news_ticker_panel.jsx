@@ -1,50 +1,34 @@
 import React, { Component } from "react";
+import socket from "../socketContext";
 
 class NewsTickerPanel extends Component {
-  state = {};
+  state = { tickers: [] };
 
   async componentDidMount() {
-    this.props.socket.on("TickerRecognitionClient", (data) => {
+    socket.on("TickerRecognitionClient", (data) => {
       console.log("Data from TickerRecognition Module :", data);
+      const tickers = [...this.state.tickers, data];
+      this.setState({ tickers });
     });
   }
 
   render() {
+    const { tickers } = this.state;
     return (
       <React.Fragment>
         <div className="container pb-1">
           <h2 className="heading-bar tb">News Tickers</h2>
         </div>
-        <marquee behavior="scroll" className="ticker-1" direction="right">
-          پاکستان پولیس کے سینئر افسر، سپرنٹینڈنٹ پولیس مفخرعدیل بدھ کے روز
-          لاہور کے علاقے جوہر ٹاؤن سے ’لاپتہ‘ ہو گئے ہیں۔ لاہور پولیس کے سربراہ
-          نے کہا ہے کہ پولیس افسر مفخر عدیل اغو نہیں ہوئے ہیں بلکہ وہ ’لاپتہ‘
-          ہیں۔ تاہم ابھی تک (ایس ایس پی) مفخر عدیل کے لاپتہ ہونے کا مقدمہ درج
-          نہیں گیا۔ پولیس افسر کے لاپتہ ہونے سے متعلق جب بی بی سی نے سی سی پی او
-          لاہور ذوالفقار حمید سے رابطہ کیا تو انھوں نے کہا کہ وہ فی الحال اس کیس
-          پر کوئی رائے نہیں دینا چاہتے۔
-        </marquee>
-
-        <marquee behavior="scroll" className="ticker-2" direction="right">
-          پاکستان پولیس کے سینئر افسر، سپرنٹینڈنٹ پولیس مفخرعدیل بدھ کے روز
-          لاہور کے علاقے جوہر ٹاؤن سے ’لاپتہ‘ ہو گئے ہیں۔ لاہور پولیس کے سربراہ
-          نے کہا ہے کہ پولیس افسر مفخر عدیل اغو نہیں ہوئے ہیں بلکہ وہ ’لاپتہ‘
-          ہیں۔ تاہم ابھی تک (ایس ایس پی) مفخر عدیل کے لاپتہ ہونے کا مقدمہ درج
-          نہیں گیا۔ پولیس افسر کے لاپتہ ہونے سے متعلق جب بی بی سی نے سی سی پی او
-          لاہور ذوالفقار حمید سے رابطہ کیا تو انھوں نے کہا کہ وہ فی الحال اس کیس
-          پر کوئی رائے نہیں دینا چاہتے۔
-        </marquee>
-
-        <div></div>
-        <marquee behavior="scroll" className="ticker-3" direction="right">
-          پاکستان پولیس کے سینئر افسر، سپرنٹینڈنٹ پولیس مفخرعدیل بدھ کے روز
-          لاہور کے علاقے جوہر ٹاؤن سے ’لاپتہ‘ ہو گئے ہیں۔ لاہور پولیس کے سربراہ
-          نے کہا ہے کہ پولیس افسر مفخر عدیل اغو نہیں ہوئے ہیں بلکہ وہ ’لاپتہ‘
-          ہیں۔ تاہم ابھی تک (ایس ایس پی) مفخر عدیل کے لاپتہ ہونے کا مقدمہ درج
-          نہیں گیا۔ پولیس افسر کے لاپتہ ہونے سے متعلق جب بی بی سی نے سی سی پی او
-          لاہور ذوالفقار حمید سے رابطہ کیا تو انھوں نے کہا کہ وہ فی الحال اس کیس
-          پر کوئی رائے نہیں دینا چاہتے۔
-        </marquee>
+        {tickers.map((ticker, index) => (
+          <marquee
+            key={index}
+            behavior="scroll"
+            className={`ticker-${index % 3}`}
+            direction="right"
+          >
+            {ticker.label}
+          </marquee>
+        ))}
       </React.Fragment>
     );
   }
