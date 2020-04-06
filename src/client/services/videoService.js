@@ -1,6 +1,6 @@
 import http from "./httpService";
 
-const apiEndpoint = `/videos`;
+const apiEndpoint = `/common/getDemoVideos`;
 
 export function getVideos() {
   return http.get(apiEndpoint);

@@ -1,134 +1,44 @@
+/**
+ * Main application file
+ */
+
+'use strict';
+
+// Set default node environment to development
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 const express = require("express");
 const os = require("os");
 var cors = require("cors");
-var fs = require("fs");
+var config = require('./config/environment');
+var socketSetup = require('./utils/socket');
+
+process.env.TZ = 'UTC';
 
 const app = express();
 app.use(cors());
 
-app.use(express.static("dist"));
-app.use("/public", express.static("public"));
+var modulesServer = require('http').createServer(app);
+var server = require('http').createServer(app);
+// exports.socket = require("socket.io")(modulesServer);
+const io = require("socket.io")(modulesServer);
+socketSetup.fromModuleClient(io);
 
-/* OS Username GET api */
-app.get("/api/getUsername", (req, res) =>
-  res.send({ username: os.userInfo().username })
-);
+const io_local = require("socket.io")(server);
+socketSetup.fromClient(io_local);
 
-/* Videos GET api */
-app.get("/api/videos", (req, res) =>
-  res.send({
-    videos: [
-      {
-        videoId: 1,
-        publishedAt: "2017-09-09T23:38:21.000Z",
-        title: "ARY News - Part 01",
-        description: "1st part of an ARY News Broadcast clip.",
-        thumbnails: {
-          default: {
-            url: "videos/thumbnails/001.png",
-          },
-          medium: {},
-          high: {},
-        },
-        url: "videos/001.mp4",
-      },
-      {
-        videoId: 2,
-        publishedAt: "2017-09-09T23:38:21.000Z",
-        title: "ARY News - Part 02",
-        description: "2nd part of an ARY News Broadcast clip.",
-        thumbnails: {
-          default: {
-            url: "videos/thumbnails/002.png",
-          },
-          medium: {},
-          high: {},
-        },
-        url: "videos/002.mp4",
-      },
-      {
-        videoId: 3,
-        publishedAt: "2017-09-09T23:38:21.000Z",
-        title: "ARY News - Part 03",
-        description: "3rd part of an ARY News Broadcast clip.",
-        thumbnails: {
-          default: {
-            url: "videos/thumbnails/003.png",
-          },
-          medium: {},
-          high: {},
-        },
-        url: "videos/003.mp4",
-      },
-      {
-        videoId: 4,
-        publishedAt: "2017-09-09T23:38:21.000Z",
-        title: "ARY News - Part 04",
-        description: "4th part of an ARY News Broadcast clip.",
-        thumbnails: {
-          default: {
-            url: "videos/thumbnails/004.png",
-          },
-          medium: {},
-          high: {},
-        },
-        url: "videos/004.mp4",
-      },
-    ],
-  })
-);
+exports.socket = io_local;
+// exports.socket_local = io_local;
 
-/* Labels GET api */
-app.get("/api/celebrities", (req, res) => {
-  fs.readFile("public/celebrities/labels.json", "utf8", function (err, data) {
-    if (err) throw err;
-    res.send(JSON.parse(data));
-  });
-});
-
-const server = app.listen(process.env.PORT || 8080, () =>
+require('./config/express')(app);
+require('./routes')(app);
+server.listen(process.env.PORT || 8080, () =>
   console.log(`Listening on port ${process.env.PORT || 8080}!`)
 );
+modulesServer.listen(config.MODULES_PORT, config.ip, () =>
+  console.log(
+    `Listening to modules on port ${config.MODULES_PORT}!`
+  )
+);
 
-// /* Socket Connections */
-// const modulesServer = app.listen(process.env.MODULES_PORT || 8909, () =>
-//   console.log(
-//     `Listening to modules on port ${process.env.MODULES_PORT || 8909}!`
-//   )
-// );
-
-const io = require("socket.io")(server);
-io.on("connection", function (socket) {
-  console.info(`Client connected [id=${socket.id}]`);
-
-  socket.on("VideoPlayTrigger", function (data) {
-    socket.broadcast.emit("FacialRecognitionCall", data);
-    socket.broadcast.emit("TickerRecognitionCall", data);
-    socket.broadcast.emit("SpeechRecognitionCall", data);
-    console.log("Video play trigger: ", data);
-  });
-
-  socket.on("VideoStopTrigger", function (data) {
-    socket.broadcast.emit("FacialRecognitionTerminate");
-    socket.broadcast.emit("TickerRecognitionTerminate");
-    socket.broadcast.emit("SpeechRecognitionTerminate");
-    console.log("Video stop trigger called!");
-  });
-
-  socket.on("FacialRecognitionData", function (data) {
-    socket.broadcast.emit("FacialRecognitionClient", data);
-    console.log("Facial Recognition data dump: ", data);
-  });
-
-  socket.on("SpeechRecognitionData", function (data) {
-    socket.broadcast.emit("SpeechRecognitionClient", data);
-    console.log("Speech Recognition data dump: ", data);
-  });
-
-  socket.on("TickerRecognitionData", function (data) {
-    socket.broadcast.emit("TickerRecognitionClient", data);
-    console.log("Ticker Recognition data dump: ", data);
-  });
-
-  socket.on("disconnect", () => console.log("Client disconnected"));
-});
+exports = module.exports = app;
