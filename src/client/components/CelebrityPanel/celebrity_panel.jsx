@@ -26,13 +26,16 @@ class CelebrityPanel extends Component {
     socket.on("FacialRecognitionClient", (data) => {
       console.log("Data from FacialRecognition Module :", data);
       const celebrities = [...this.state.currentCelebrities];
+      let currentCelebrities = [...celebrities];
 
-      const checkCelebId = (celeb) => celeb.celeb_id === data.celeb_id;
+      data.map((celebrity) => {
+        const checkCelebId = (celeb) => celeb.celeb_id === celebrity.celeb_id;
 
-      if (!celebrities.some(checkCelebId)) {
-        const currentCelebrities = [...celebrities, data];
-        this.setState({ currentCelebrities });
-      }
+        if (!celebrities.some(checkCelebId)) {
+          currentCelebrities = [...currentCelebrities, celebrity];
+        }
+      });
+      this.setState({ currentCelebrities });
     });
   }
 

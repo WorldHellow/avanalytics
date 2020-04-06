@@ -5,7 +5,7 @@ import random
 
 # Socket connection for communication with the server
 sio = socketio.Client()
-sio.connect('https://cryptic-shore-88753.herokuapp.com')
+sio.connect('http://localhost:8080')
 
 # Scheduler for sending data to server after every regular intervals
 scheduler = BackgroundScheduler()
@@ -17,8 +17,10 @@ def main():
 
 # Replace FacialRecognition with your module call as specified
 def FacialRecognitionEmit():
-    sio.emit('FacialRecognitionData', {
-             'celeb_id': random.randint(0, 107), 'timestamp': 1.0434782608695652})
+    sio.emit('FacialRecognitionData', [
+        {"celeb_id": 83, "timestamp": 25.32},
+        {"celeb_id": 28, "timestamp": 25.32}
+    ])
 
 
 @sio.event
