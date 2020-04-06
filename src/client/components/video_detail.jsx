@@ -11,14 +11,6 @@ import "../assets/css/celebrity_card.css";
 import "../assets/css/heading_bar.css";
 
 class VideoDetail extends Component {
-  closedCaptionRef = React.createRef();
-
-  scrollToBottom = () => {
-    if (this.props.video && this.closedCaptionRef) {
-      this.closedCaptionRef.current.scrollTop = this.closedCaptionRef.current.scrollHeight;
-    }
-  };
-
   handleVideoPlay = () => {
     const videoId = this.props.video.videoId;
     socket.emit("VideoPlayTrigger", { videoId: videoId });
@@ -33,14 +25,6 @@ class VideoDetail extends Component {
       position: toast.POSITION.BOTTOM_RIGHT,
     });
   };
-
-  async componentDidMount() {
-    this.scrollToBottom();
-  }
-
-  componentDidUpdate() {
-    this.scrollToBottom();
-  }
 
   render() {
     const { video } = this.props;
@@ -79,9 +63,7 @@ class VideoDetail extends Component {
                 </div>
                 <div className="row">
                   <div className="col-md-12">
-                    <ClosedCaptionPanel
-                      closedCaptionRef={this.closedCaptionRef}
-                    />
+                    <ClosedCaptionPanel />
                     <NewsTickerPanel />
                   </div>
                 </div>

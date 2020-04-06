@@ -5,7 +5,7 @@ import random
 
 # Socket connection for communication with the server
 sio = socketio.Client()
-sio.connect('https://cryptic-shore-88753.herokuapp.com')
+sio.connect('http://localhost:8080')
 
 # Scheduler for sending data to server after every regular intervals
 scheduler = BackgroundScheduler()
@@ -23,7 +23,7 @@ def TickerRecognitionEmit():
 
 @sio.event
 def TickerRecognitionCall(data):
-    scheduler.add_job(TickerRecognitionEmit, 'interval', seconds=5)
+    scheduler.add_job(TickerRecognitionEmit, 'interval', seconds=10)
     print('VideoTrigger Call with data', data)
 
 

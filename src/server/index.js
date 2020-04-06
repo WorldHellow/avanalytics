@@ -121,6 +121,7 @@ io.on("connection", function (socket) {
   });
 
   socket.on("SpeechRecognitionData", function (data) {
+    socket.broadcast.emit("SpeechRecognitionClient", data);
     console.log("Speech Recognition data dump: ", data);
   });
 
