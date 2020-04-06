@@ -18,26 +18,26 @@ const app = express();
 app.use(cors());
 
 // var modulesServer = require('http').createServer(app);
-var server = require('http').createServer(app);
+// var server = require('http').createServer(app);
 
 // exports.socket = require("socket.io")(modulesServer);
 // const io = require("socket.io")(modulesServer);
-
-const io_local = require("socket.io")(server);
-
-exports.socket = io_local;
 // exports.socket_local = io_local;
 
 require("./config/express")(app);
 require("./routes")(app);
-server.listen(process.env.PORT || 8080, () =>
+
+const server = app.listen(process.env.PORT || 8080, () =>
   console.log(`Listening on port ${process.env.PORT || 8080}!`)
 );
 /*
 modulesServer.listen(config.MODULES_PORT, config.ip, () =>
-  console.log(`Listening to modules on port ${config.MODULES_PORT}!`)
+console.log(`Listening to modules on port ${config.MODULES_PORT}!`)
 );
 */
+
+const io_local = require("socket.io")(server);
+exports.socket = io_local;
 
 // socketSetup.fromModuleClient(io);
 socketSetup.fromClient(io_local);
