@@ -5,6 +5,7 @@
 'use strict';
 
 var express = require('express');
+var os = require('os');
 
 module.exports = function(app) {
 
@@ -15,6 +16,5 @@ module.exports = function(app) {
     res.send({ username: os.userInfo().username })
   );
 
-  app.get("/", (req, res) => res.send({ username: os.userInfo().username }));
-
+  // app.get("/", (req, res) => res.send({ username: os.userInfo().username }));
 };
