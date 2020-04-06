@@ -5,7 +5,7 @@ import random
 
 # Socket connection for communication with the server
 sio = socketio.Client()
-sio.connect('http://localhost:8080')
+sio.connect('https://cryptic-shore-88753.herokuapp.com')
 
 # Scheduler for sending data to server after every regular intervals
 scheduler = BackgroundScheduler()
