@@ -34,7 +34,9 @@ exports.getVideoData = function(req, res)
         });
 */
 
-      console.log('demos ')
-      socket.emit('FacialRecognitionData', {target: 'demo'});
+      console.log('demos ');
+      // console.log(socket);
+      // socket.volatile.emit('FacialRecognitionData', {
+      //       'celeb_id': random.randint(0, 107), 'timestamp': 1.0434782608695652});
       return res.status(500).send('something here');
 };
